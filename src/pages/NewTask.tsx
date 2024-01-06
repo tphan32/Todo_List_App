@@ -38,9 +38,9 @@ export default function NewTask() {
   };
 
   return (
-    <Box component="main" className="flex flex-col gap-y-5">
+    <Box component="main" className="flex flex-col gap-y-5 items-center">
       <Typography variant="h4">New Task</Typography>
-      <Box maxWidth="sm" component="form" onSubmit={handleSubmit}>
+      <Box maxWidth="sm" className="w-7/12" component="form" onSubmit={handleSubmit}>
         <Typography variant="h6" gutterBottom>
           Title
         </Typography>

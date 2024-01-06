@@ -39,9 +39,9 @@ export default function ViewTask() {
   };
 
   return (
-    <Box component="main" className="flex flex-col gap-y-5">
+    <Box component="main" className="flex flex-col gap-y-5 items-center">
       <Typography variant="h4">View Task</Typography>
-      <Box maxWidth="sm">
+      <Box maxWidth="sm" className="w-7/12">
         <Typography variant="h6">Title</Typography>
         <Typography className="mb-5" noWrap paragraph>
           {task.title}
