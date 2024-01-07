@@ -7,7 +7,12 @@ import { Outlet } from "react-router-dom";
 export default function Layout() {
   return (
     <Container className="my-20">
-      <Typography variant="h3" component="h1" gutterBottom className="text-center">
+      <Typography
+        variant="h3"
+        component="h1"
+        gutterBottom
+        className="text-center"
+      >
         TODO List App
       </Typography>
       <Outlet />

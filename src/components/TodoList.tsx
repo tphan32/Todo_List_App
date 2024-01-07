@@ -2,7 +2,7 @@ import Grid from "@mui/material/Grid";
 import React from "react";
 import CustomCard from "./CustomCard";
 import { Task } from "../pages/Dashboard";
-import { Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 
 type TodoListProps = {
   tasks: Task[];
@@ -10,7 +10,7 @@ type TodoListProps = {
 
 export default function TodoList({ tasks }: TodoListProps) {
   if (tasks.length === 0) {
-    return <Typography>You're free. You have nothing to do!</Typography>;
+    return <Typography>You have nothing here!</Typography>;
   }
 
   return (

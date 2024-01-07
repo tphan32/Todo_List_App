@@ -10,7 +10,7 @@ import Chip from "@mui/material/Chip";
 import { Status, Task } from "../pages/Dashboard";
 import { useNavigate } from "react-router-dom";
 
-type CustomCardProps = Task
+type CustomCardProps = Task;
 
 export default function CustomCard({
   id,
@@ -27,7 +27,9 @@ export default function CustomCard({
         <Typography gutterBottom variant="h5" component="h2" noWrap>
           {title}
         </Typography>
-        <Typography variant="body2" noWrap>{description}</Typography>
+        <Typography variant="body2" noWrap>
+          {description}
+        </Typography>
         <Chip
           label={status.toUpperCase()}
           color={`${
@@ -38,8 +40,22 @@ export default function CustomCard({
         />
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => {navigate(`view/${id}`)}}>View</Button>
-        <Button size="small" onClick={() => {navigate(`update/${id}`)}}>Edit</Button>
+        <Button
+          size="small"
+          onClick={() => {
+            navigate(`view/${id}`);
+          }}
+        >
+          View
+        </Button>
+        <Button
+          size="small"
+          onClick={() => {
+            navigate(`update/${id}`);
+          }}
+        >
+          Edit
+        </Button>
       </CardActions>
     </Card>
   );

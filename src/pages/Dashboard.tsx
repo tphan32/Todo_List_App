@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import TodoList from "../components/TodoList";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
+import { Chip, Typography } from "@mui/material";
 
 export enum Status {
   PENDING = "PENDING",
@@ -17,8 +18,6 @@ export interface Task {
 }
 
 export default function Todo() {
-  // How to update the tasks state when a task is removed
-  // https://stackoverflow.com/questions/72419273/does-parent-component-re-renders-when-changes-occur-in-child-components
   const [tasks, setTasks] = React.useState<Task[]>([]);
   const navigate = useNavigate();
 
@@ -29,11 +28,41 @@ export default function Todo() {
     }
   }, []);
 
+  const handleFilter = (status?: string) => {
+    const data = localStorage.getItem("tasks");
+    if (data) {
+      const tasks: Task[] = JSON.parse(data);
+      if (status) {
+        setTasks(tasks.filter((task) => task.status === status));
+        return;
+      }
+      setTasks(tasks);
+    }
+  };
+
+  // console.log("123");
+
   return (
-    <Box component="main" className="flex flex-col gap-y-10">
+    <Box component="main" className="flex flex-col gap-y-5">
       <Button variant="outlined" size="large" onClick={() => navigate("/new")}>
         Add Task
       </Button>
+      <Typography variant="h4">Tasks</Typography>
+      <Box className="flex gap-x-2">
+        <Chip
+          label={Status.COMPLETED}
+          variant="outlined"
+          onClick={() => handleFilter(Status.COMPLETED)}
+          color="success"
+        />
+        <Chip
+          label={Status.PENDING}
+          variant="outlined"
+          onClick={() => handleFilter(Status.PENDING)}
+          color="warning"
+        />
+        <Chip label="ALL" variant="outlined" onClick={() => handleFilter()} />
+      </Box>
       <TodoList tasks={tasks} />
     </Box>
   );

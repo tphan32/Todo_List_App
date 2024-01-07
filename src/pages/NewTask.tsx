@@ -6,11 +6,23 @@ import { Status } from "./Dashboard";
 
 export default function NewTask() {
   const navigate = useNavigate();
+  const [error, setError] = React.useState<string>("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData);
+    const data = Object.fromEntries(formData) as {
+      title: string;
+      description: string;
+    };
+
+    const cleanTitle = data.title.trim();
+    const cleanDescription = data.description.trim();
+    if (!cleanTitle || !cleanDescription) {
+      setError("Please fill all the required fields");
+      return;
+    }
+
     const currentTasks = localStorage.getItem("tasks");
     if (currentTasks) {
       const tasks = JSON.parse(currentTasks);
@@ -40,9 +52,14 @@ export default function NewTask() {
   return (
     <Box component="main" className="flex flex-col gap-y-5 items-center">
       <Typography variant="h4">New Task</Typography>
-      <Box maxWidth="sm" className="w-7/12" component="form" onSubmit={handleSubmit}>
+      <Box
+        maxWidth="sm"
+        className="w-7/12"
+        component="form"
+        onSubmit={handleSubmit}
+      >
         <Typography variant="h6" gutterBottom>
-          Title
+          Title*
         </Typography>
         <TextField
           id="title"
@@ -51,7 +68,7 @@ export default function NewTask() {
           className="mb-5"
         />
         <Typography variant="h6" gutterBottom>
-          Description
+          Description*
         </Typography>
         <TextField
           id="description"
@@ -61,6 +78,11 @@ export default function NewTask() {
           variant="outlined"
           fullWidth
         />
+        {error && (
+          <Typography className="text-red-500 font-semibold">
+            {error}
+          </Typography>
+        )}
         <Button
           variant="contained"
           size="large"

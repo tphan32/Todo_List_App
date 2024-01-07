@@ -8,6 +8,7 @@ import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TextField from "@mui/material/TextField";
+import ErrorIcon from "@mui/icons-material/Error";
 
 export default function UpdateTask() {
   const navigate = useNavigate();
@@ -21,16 +22,25 @@ export default function UpdateTask() {
 
   const [title, setTitle] = useState<string>(task.title);
   const [description, setDescription] = useState<string>(task.description);
+  const [error, setError] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const cleanTitle = title.trim();
+    const cleanDescription = description.trim();
+
+    if (!cleanTitle || !cleanDescription) {
+      setError("Please fill all the required fields");
+      return;
+    }
+
     const tasks: Task[] = JSON.parse(localStorage.getItem("tasks")!);
     const task = tasks.find((t) => t.id === +params.id!);
     if (!task) {
       return;
     }
-    task.title = title;
-    task.description = description;
+    task.title = cleanTitle;
+    task.description = cleanDescription;
     localStorage.setItem("tasks", JSON.stringify(tasks));
     navigate("/");
   };
@@ -44,9 +54,15 @@ export default function UpdateTask() {
   return (
     <Box component="main" className="flex flex-col gap-y-5 items-center">
       <Typography variant="h4">Update Task</Typography>
-      <Box maxWidth="sm" className="w-7/12" component="form" onSubmit={handleSubmit}>
+      <Box
+        maxWidth="sm"
+        className="w-7/12"
+        component="form"
+        onSubmit={handleSubmit}
+        noValidate
+      >
         <Typography variant="h6" gutterBottom>
-          Title
+          Title*
         </Typography>
         <TextField
           id="title"
@@ -57,8 +73,10 @@ export default function UpdateTask() {
           onChange={(e) => setTitle(e.target.value)}
         />
         <Typography variant="h6" gutterBottom>
-          Description
+          Description*
+          {/* {error && <ErrorIcon fontSize="small" color="error" />} */}
         </Typography>
+
         <TextField
           id="description"
           name="description"
@@ -88,6 +106,11 @@ export default function UpdateTask() {
             <DeleteIcon fontSize="large" />
           </IconButton>
         </Box>
+        {error && (
+          <Typography className="text-red-500 font-semibold">
+            {error}
+          </Typography>
+        )}
         <Button
           variant="contained"
           size="large"
