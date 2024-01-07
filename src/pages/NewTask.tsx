@@ -3,10 +3,12 @@ import Box from "@mui/material/Box";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Status } from "./Dashboard";
+import DisplayError from "../components/DisplayError";
+import { Error } from "./UpdateTask";
 
 export default function NewTask() {
   const navigate = useNavigate();
-  const [error, setError] = React.useState<string>("");
+  const [error, setError] = React.useState<Error>();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,8 +20,19 @@ export default function NewTask() {
 
     const cleanTitle = data.title.trim();
     const cleanDescription = data.description.trim();
-    if (!cleanTitle || !cleanDescription) {
-      setError("Please fill all the required fields");
+
+    if (!cleanTitle && !cleanDescription) {
+      setError(Error.ALL);
+      return;
+    }
+
+    if (!cleanTitle) {
+      setError(Error.MISSING_TITLE);
+      return;
+    }
+
+    if (!cleanDescription) {
+      setError(Error.MISSING_DESCRIPTION);
       return;
     }
 
@@ -28,8 +41,8 @@ export default function NewTask() {
       const tasks = JSON.parse(currentTasks);
       tasks.push({
         id: tasks.length + 1,
-        title: data.title,
-        description: data.description,
+        title: cleanTitle,
+        description: cleanDescription,
         status: Status.PENDING,
       });
       localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -39,8 +52,8 @@ export default function NewTask() {
         JSON.stringify([
           {
             id: 1,
-            title: data.title,
-            description: data.description,
+            title: cleanTitle,
+            description: cleanDescription,
             status: Status.PENDING,
           },
         ])
@@ -66,6 +79,9 @@ export default function NewTask() {
           name="title"
           variant="outlined"
           className="mb-5"
+          error={
+            error && (error === Error.MISSING_TITLE || error === Error.ALL)
+          }
         />
         <Typography variant="h6" gutterBottom>
           Description*
@@ -77,12 +93,12 @@ export default function NewTask() {
           rows={10}
           variant="outlined"
           fullWidth
+          error={
+            error &&
+            (error === Error.MISSING_DESCRIPTION || error === Error.ALL)
+          }
         />
-        {error && (
-          <Typography className="text-red-500 font-semibold">
-            {error}
-          </Typography>
-        )}
+        <DisplayError error={error} />
         <Button
           variant="contained"
           size="large"

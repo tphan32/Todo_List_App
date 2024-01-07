@@ -8,7 +8,13 @@ import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TextField from "@mui/material/TextField";
-import ErrorIcon from "@mui/icons-material/Error";
+import DisplayError from "../components/DisplayError";
+
+export enum Error {
+  MISSING_TITLE = "MISSING_TITLE",
+  MISSING_DESCRIPTION = "MISSING_DESCRIPTION",
+  ALL = "ALL",
+}
 
 export default function UpdateTask() {
   const navigate = useNavigate();
@@ -22,15 +28,25 @@ export default function UpdateTask() {
 
   const [title, setTitle] = useState<string>(task.title);
   const [description, setDescription] = useState<string>(task.description);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<Error>();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const cleanTitle = title.trim();
     const cleanDescription = description.trim();
 
-    if (!cleanTitle || !cleanDescription) {
-      setError("Please fill all the required fields");
+    if (!cleanTitle && !cleanDescription) {
+      setError(Error.ALL);
+      return;
+    }
+
+    if (!cleanTitle) {
+      setError(Error.MISSING_TITLE);
+      return;
+    }
+
+    if (!cleanDescription) {
+      setError(Error.MISSING_DESCRIPTION);
       return;
     }
 
@@ -71,12 +87,13 @@ export default function UpdateTask() {
           className="mb-5"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          error={
+            error && (error === Error.MISSING_TITLE || error === Error.ALL)
+          }
         />
         <Typography variant="h6" gutterBottom>
           Description*
-          {/* {error && <ErrorIcon fontSize="small" color="error" />} */}
         </Typography>
-
         <TextField
           id="description"
           name="description"
@@ -87,6 +104,10 @@ export default function UpdateTask() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="mb-5"
+          error={
+            error &&
+            (error === Error.MISSING_DESCRIPTION || error === Error.ALL)
+          }
         />
         <Typography variant="h6" gutterBottom>
           Status
@@ -106,11 +127,7 @@ export default function UpdateTask() {
             <DeleteIcon fontSize="large" />
           </IconButton>
         </Box>
-        {error && (
-          <Typography className="text-red-500 font-semibold">
-            {error}
-          </Typography>
-        )}
+        <DisplayError error={error} />
         <Button
           variant="contained"
           size="large"

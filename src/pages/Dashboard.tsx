@@ -40,8 +40,6 @@ export default function Todo() {
     }
   };
 
-  // console.log("123");
-
   return (
     <Box component="main" className="flex flex-col gap-y-5">
       <Button variant="outlined" size="large" onClick={() => navigate("/new")}>
