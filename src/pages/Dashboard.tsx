@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TodoList from "../components/TodoList";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { Chip, Typography } from "@mui/material";
+import { useAppContext } from "../components/store/AppContext";
 
 export enum Status {
   PENDING = "PENDING",
@@ -11,34 +12,21 @@ export enum Status {
 }
 
 export interface Task {
-  id: number;
+  id: string;
   title: string;
   description: string;
   status: Status;
 }
 
 export default function Todo() {
-  const [tasks, setTasks] = React.useState<Task[]>([]);
+  const { tasks } = useAppContext();
+  let filteredTasks = tasks;
+  const [filter, setFilter] = useState<Status | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const data = localStorage.getItem("tasks");
-    if (data) {
-      setTasks(JSON.parse(data));
-    }
-  }, []);
-
-  const handleFilter = (status?: string) => {
-    const data = localStorage.getItem("tasks");
-    if (data) {
-      const tasks: Task[] = JSON.parse(data);
-      if (status) {
-        setTasks(tasks.filter((task) => task.status === status));
-        return;
-      }
-      setTasks(tasks);
-    }
-  };
+  if (filter) {
+    filteredTasks = tasks.filter((task) => task.status === filter);
+  }
 
   return (
     <Box component="main" className="flex flex-col gap-y-5">
@@ -50,18 +38,18 @@ export default function Todo() {
         <Chip
           label={Status.COMPLETED}
           variant="outlined"
-          onClick={() => handleFilter(Status.COMPLETED)}
+          onClick={() => setFilter(Status.COMPLETED)}
           color="success"
         />
         <Chip
           label={Status.PENDING}
           variant="outlined"
-          onClick={() => handleFilter(Status.PENDING)}
+          onClick={() => setFilter(Status.PENDING)}
           color="warning"
         />
-        <Chip label="ALL" variant="outlined" onClick={() => handleFilter()} />
+        <Chip label="ALL" variant="outlined" onClick={() => setFilter(null)} />
       </Box>
-      <TodoList tasks={tasks} />
+      <TodoList tasks={filteredTasks} />
     </Box>
   );
 }

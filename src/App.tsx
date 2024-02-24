@@ -5,6 +5,7 @@ import NewTask from "./pages/NewTask";
 import Layout from "./components/Layout";
 import ViewTask from "./pages/ViewTask";
 import UpdateTask from "./pages/UpdateTask";
+import AppContextProvider from "./components/store/AppContext";
 
 const router = createBrowserRouter([
   {
@@ -20,5 +21,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AppContextProvider>
+      <RouterProvider router={router} />;
+    </AppContextProvider>
+  )
 }

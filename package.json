@@ -17,6 +17,7 @@
     "react-scripts": "latest",
     "tailwindcss": "latest",
     "typescript": "latest",
+    "uuid": "^9.0.1",
     "web-vitals": "latest"
   },
   "scripts": {
@@ -35,5 +36,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.8"
   }
 }

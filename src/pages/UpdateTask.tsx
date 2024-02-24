@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TextField from "@mui/material/TextField";
 import DisplayError from "../components/DisplayError";
+import { useAppContext } from "../components/store/AppContext";
 
 export enum Error {
   MISSING_TITLE = "MISSING_TITLE",
@@ -19,8 +20,8 @@ export enum Error {
 export default function UpdateTask() {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
-  const tasks: Task[] = JSON.parse(localStorage.getItem("tasks") || "[]");
-  const task = tasks.find((task) => task.id === +params.id!);
+  const { findTask, removeTask, updateTask } = useAppContext();
+  const task = findTask(params.id!);
 
   if (!task) {
     return <Typography>Task not found</Typography>;
@@ -50,20 +51,17 @@ export default function UpdateTask() {
       return;
     }
 
-    const tasks: Task[] = JSON.parse(localStorage.getItem("tasks")!);
-    const task = tasks.find((t) => t.id === +params.id!);
-    if (!task) {
-      return;
-    }
-    task.title = cleanTitle;
-    task.description = cleanDescription;
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    updateTask({
+      id: task.id,
+      title: cleanTitle,
+      description: cleanDescription,
+      status: task.status,
+    });
     navigate("/");
   };
 
   const handleDelete = () => {
-    const filteredTasks = tasks.filter((t: Task) => t.id !== task.id);
-    localStorage.setItem("tasks", JSON.stringify(filteredTasks));
+    removeTask(task.id);
     navigate("/");
   };
 

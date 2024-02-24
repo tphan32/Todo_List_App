@@ -3,17 +3,18 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Status, Task } from "./Dashboard";
+import { Status } from "./Dashboard";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useAppContext } from "../components/store/AppContext";
 
 export default function ViewTask() {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
 
-  const tasks: Task[] = JSON.parse(localStorage.getItem("tasks") || "[]");
-  const task = tasks.find((task) => task.id === +params.id!);
+  const { findTask, updateTaskStatus, removeTask } = useAppContext();
+  const task = findTask(params.id!);
 
   if (!task) {
     return <Typography>Task not found</Typography>;
@@ -21,20 +22,17 @@ export default function ViewTask() {
   const [status, setStatus] = useState<Status>(task.status);
 
   const handleComplete = () => {
-    task.status = Status.COMPLETED;
     setStatus(Status.COMPLETED);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    updateTaskStatus(task.id, Status.COMPLETED);
   };
 
   const handleHold = () => {
-    task.status = Status.PENDING;
     setStatus(Status.PENDING);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    updateTaskStatus(task.id, Status.PENDING);
   };
 
   const handleDelete = () => {
-    const filteredTasks = tasks.filter((t: Task) => t.id !== task.id);
-    localStorage.setItem("tasks", JSON.stringify(filteredTasks));
+    removeTask(task.id);
     navigate("/");
   };
 

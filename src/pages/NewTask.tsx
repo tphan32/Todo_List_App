@@ -5,10 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { Status } from "./Dashboard";
 import DisplayError from "../components/DisplayError";
 import { Error } from "./UpdateTask";
+import { v4 as uuidv4 } from 'uuid';
+import { useAppContext } from "../components/store/AppContext";
 
 export default function NewTask() {
   const navigate = useNavigate();
   const [error, setError] = React.useState<Error>();
+  const { addTask } = useAppContext();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,29 +39,14 @@ export default function NewTask() {
       return;
     }
 
-    const currentTasks = localStorage.getItem("tasks");
-    if (currentTasks) {
-      const tasks = JSON.parse(currentTasks);
-      tasks.push({
-        id: tasks.length + 1,
-        title: cleanTitle,
-        description: cleanDescription,
-        status: Status.PENDING,
-      });
-      localStorage.setItem("tasks", JSON.stringify(tasks));
-    } else {
-      localStorage.setItem(
-        "tasks",
-        JSON.stringify([
-          {
-            id: 1,
-            title: cleanTitle,
-            description: cleanDescription,
-            status: Status.PENDING,
-          },
-        ])
-      );
-    }
+    addTask({
+      id: uuidv4(),
+      title: cleanTitle,
+      description: cleanDescription,
+      status: Status.PENDING,
+    })
+
+
     navigate("/");
   };
 
