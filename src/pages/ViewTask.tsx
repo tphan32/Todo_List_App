@@ -28,8 +28,8 @@ export default function ViewTask() {
   };
 
   const handleHold = () => {
-    setStatus(Status.PENDING);
-    updateTaskStatus(task.id, Status.PENDING);
+    setStatus(Status.IN_PROGRESS);
+    updateTaskStatus(task.id, Status.IN_PROGRESS);
   };
 
   const handleDelete = () => {
@@ -63,7 +63,7 @@ export default function ViewTask() {
           className="mb-5"
         />
         <ConfirmModal modalType="delete" confirm={handleDelete} />
-        {status.toUpperCase() === Status.PENDING && (
+        {status.toUpperCase() === Status.IN_PROGRESS && (
           <Button
             variant="contained"
             size="large"

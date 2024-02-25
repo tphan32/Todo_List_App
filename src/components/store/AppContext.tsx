@@ -1,16 +1,5 @@
-import React, { createContext, useReducer, PropsWithChildren } from "react";
-
-export enum Status {
-  PENDING = "PENDING",
-  COMPLETED = "COMPLETED",
-}
-
-export interface Task {
-  id: string;
-  title: string;
-  description: string;
-  status: Status;
-}
+import React, { createContext, useReducer, PropsWithChildren, useContext } from "react";
+import { Status, Task } from "../../pages/Dashboard";
 
 type AppState = {
   tasks: Task[];
@@ -107,7 +96,7 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
 };
 
 export function useAppContext() {
-  const appCtx = React.useContext(AppContext);
+  const appCtx = useContext(AppContext);
   if (!appCtx) {
     throw new Error("useAppContext must be used within a AppContextProvider");
   }

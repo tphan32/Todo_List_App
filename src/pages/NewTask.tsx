@@ -43,7 +43,7 @@ export default function NewTask() {
       id: uuidv4(),
       title: cleanTitle,
       description: cleanDescription,
-      status: Status.PENDING,
+      status: Status.BACKLOG,
     })
 
 

@@ -3,14 +3,14 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Status, Task } from "./Dashboard";
-import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Status } from "./Dashboard";
 import TextField from "@mui/material/TextField";
 import DisplayError from "../components/DisplayError";
 import { useAppContext } from "../components/store/AppContext";
 import ConfirmModal from "../components/ConfirmModal";
+import FormControl from "@mui/material/FormControl/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select/Select";
+import MenuItem from "@mui/material/MenuItem/MenuItem";
 
 export enum Error {
   MISSING_TITLE = "MISSING_TITLE",
@@ -21,7 +21,7 @@ export enum Error {
 export default function UpdateTask() {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
-  const { findTask, removeTask, updateTask } = useAppContext();
+  const { findTask, removeTask, updateTask, updateTaskStatus } = useAppContext();
   const task = findTask(params.id!);
 
   if (!task) {
@@ -66,6 +66,10 @@ export default function UpdateTask() {
     navigate("/");
   };
 
+  const handleUpdateTaskStatus = (e: SelectChangeEvent) => {
+    updateTaskStatus(task.id, e.target.value as Status);
+  }
+
   return (
     <Box component="main" className="flex flex-col gap-y-5 items-center">
       <Typography variant="h4">Update Task</Typography>
@@ -77,7 +81,7 @@ export default function UpdateTask() {
         noValidate
       >
         <Typography variant="h6" gutterBottom>
-          Title*
+          Title
         </Typography>
         <TextField
           id="title"
@@ -91,7 +95,7 @@ export default function UpdateTask() {
           }
         />
         <Typography variant="h6" gutterBottom>
-          Description*
+          Description
         </Typography>
         <TextField
           id="description"
@@ -111,17 +115,21 @@ export default function UpdateTask() {
         <Typography variant="h6" gutterBottom>
           Status
         </Typography>
-        <Chip
-          label={task.status.toUpperCase()}
-          color={`${
-            task.status.toUpperCase() === Status.COMPLETED
-              ? "success"
-              : "warning"
-          }`}
-          size="medium"
-          className="mb-5"
-        />
-        <ConfirmModal modalType="delete" confirm={handleDelete} />
+        <FormControl fullWidth className="mb-2">
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            onChange={handleUpdateTaskStatus}
+            defaultValue={task.status}
+            value={task.status}
+          >
+            <MenuItem value={Status.BACKLOG}>Backlog</MenuItem>
+            <MenuItem value={Status.BLOCKING}>Blocking</MenuItem>
+            <MenuItem value={Status.IN_PROGRESS}>In Progress</MenuItem>
+            <MenuItem value={Status.COMPLETED}>Completed</MenuItem>
+          </Select>
+        </FormControl>
+        <ConfirmModal modalType="delete" confirm={handleDelete}/>
         <DisplayError error={error} />
         <Button
           variant="contained"

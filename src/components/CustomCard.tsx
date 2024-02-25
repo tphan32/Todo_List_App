@@ -15,6 +15,7 @@ import IconButton from "@mui/material/IconButton/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useAppContext } from "./store/AppContext";
 import ConfirmModal from "./ConfirmModal";
+import StatusChip from "./StatusChip";
 
 type CustomCardProps = Task;
 
@@ -30,7 +31,7 @@ export default function CustomCard({
 
   const handleComplete = (id: string) => {
     if (isTaskCompleted) {
-      updateTaskStatus(id, Status.PENDING);
+      updateTaskStatus(id, Status.IN_PROGRESS);
     } else {
       updateTaskStatus(id, Status.COMPLETED);
     }
@@ -47,15 +48,9 @@ export default function CustomCard({
           {description}
         </Typography>
         <Typography variant="subtitle2" noWrap>
-          Status:
+          Status
         </Typography>
-        <Chip
-          label={status.toUpperCase()}
-          color={`${
-            status.toUpperCase() === Status.COMPLETED ? "success" : "warning"
-          }`}
-          size="medium"
-        />
+        <StatusChip status={status}/>
       </CardContent>
       <CardActions>
         <Button
