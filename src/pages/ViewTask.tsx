@@ -8,6 +8,7 @@ import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useAppContext } from "../components/store/AppContext";
+import ConfirmModal from "../components/ConfirmModal";
 
 export default function ViewTask() {
   const navigate = useNavigate();
@@ -61,11 +62,7 @@ export default function ViewTask() {
           size="medium"
           className="mb-5"
         />
-        <Box component="div">
-          <IconButton aria-label="delete" size="large" onClick={handleDelete}>
-            <DeleteIcon fontSize="large" />
-          </IconButton>
-        </Box>
+        <ConfirmModal modalType="delete" confirm={handleDelete} />
         {status.toUpperCase() === Status.PENDING && (
           <Button
             variant="contained"

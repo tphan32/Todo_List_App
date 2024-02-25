@@ -14,6 +14,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import IconButton from "@mui/material/IconButton/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useAppContext } from "./store/AppContext";
+import ConfirmModal from "./ConfirmModal";
 
 type CustomCardProps = Task;
 
@@ -81,9 +82,7 @@ export default function CustomCard({
         >
           {isTaskCompleted ? <ClearIcon /> : <DoneIcon />}
         </IconButton>
-        <IconButton aria-label="delete" onClick={() => removeTask(id)}>
-          <DeleteIcon />
-        </IconButton>
+        <ConfirmModal confirm={() => removeTask(id)} modalType="delete"/>
       </CardActions>
     </Card>
   );

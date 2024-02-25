@@ -10,6 +10,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import TextField from "@mui/material/TextField";
 import DisplayError from "../components/DisplayError";
 import { useAppContext } from "../components/store/AppContext";
+import ConfirmModal from "../components/ConfirmModal";
 
 export enum Error {
   MISSING_TITLE = "MISSING_TITLE",
@@ -120,11 +121,7 @@ export default function UpdateTask() {
           size="medium"
           className="mb-5"
         />
-        <Box component="div">
-          <IconButton aria-label="delete" size="large" onClick={handleDelete}>
-            <DeleteIcon fontSize="large" />
-          </IconButton>
-        </Box>
+        <ConfirmModal modalType="delete" confirm={handleDelete} />
         <DisplayError error={error} />
         <Button
           variant="contained"
